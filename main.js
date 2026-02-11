@@ -53,9 +53,10 @@ const dialogueTree = {
   },
   node2: {
     "id": "node2",
-    "text": "That's wonderful to hear!",
+    "text": "Why should I tell you?",
     "options": [
-      { "response": "Goodbye.", "next": "end" }
+      { "response": "I just wanna know the time.", "next": "node4" },
+      { "response": "You're no help... (leave)", "next": "end" }
     ]
   },
   node3: {
@@ -63,6 +64,14 @@ const dialogueTree = {
     "text": "Oh, I see. Well, have a good day!",
     "options": [
       { "response": "You too.", "next": "end" }
+    ]
+  },
+  node4: {
+    "id": "node4",
+    "text": "I'll tell you for $20.",
+    "options": [
+      { "response": "You too.", "next": "end" },
+      { "response": "I don't have any money.", "next": "end" }
     ]
   },
   end: {
@@ -90,7 +99,7 @@ function textAppear(str){
     if(i>str.length){
       clearInterval(interval)
     }
-  },50)
+  },30)
 }
 
 function renderOptions(boxId){
