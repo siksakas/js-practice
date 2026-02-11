@@ -13,6 +13,24 @@ const character1 = [
   "    /`    \\   /     `\\"
 ].join("\n")
 
+const character2 = [
+  "character 2:",
+  "           .---.",
+  "         /` ___|`\\",
+  "         |_/    \\|",
+  "         (  -/-  )",
+  "          \\_ - _/",
+  "         .-'|_|'-.",
+  "        /         \\",
+  "       /     O     \\",
+  "      / _____!_____ \\",
+  "     /.-------------.\\"
+].join("\n")
+
 window.onload = () => {
-  document.getElementById("character").innerHTML = character1;
+  document.getElementById("character").innerHTML = character2;
+}
+
+function talk() {
+
 }
