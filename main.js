@@ -56,8 +56,9 @@ const dialogueTree = {
 
 function talk() {
   document.getElementById("character").innerHTML = character1;
-  console.log("clicked!");
-  textAppear(dialogueTree.start.text);
+  renderOptions("start");
+  //textAppear(dialogueTree.start.text);
+  //renderOptions("start");
 }
 
 function textAppear(str){
@@ -80,13 +81,12 @@ function createDialogueBox(boxId){
 
 window.onload = () => {
   document.getElementById("character").innerHTML = character2;
-  renderOptions("start")
+  textAppear(dialogueTree.start.text);
 }
 
 function renderOptions(boxId){
-  //document.createElement('button').innerHTML = dialogueTree.boxId.options[0].response
-  //console.log(dialogueTree.boxId.options[0].response)
-
-  console.log(dialogueTree[boxId].options[0].response)
+  newBox = document.createElement('button');
+  newBox.innerHTML = dialogueTree[boxId].options[0].response;
+  document.body.appendChild(newBox);
 }
 
