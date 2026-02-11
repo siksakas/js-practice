@@ -52,10 +52,10 @@ const dialogueTree = {
   }
 }
 
-function talk() {
+function startTalk() {
   document.getElementById('btn').remove();
   document.getElementById("character").innerHTML = character1;
-  renderOptions("start");
+  nextOption("start");
 }
 
 function textAppear(str){
@@ -69,11 +69,6 @@ function textAppear(str){
       clearInterval(interval)
     }
   },50)
-}
-
-function createDialogueBox(boxId){
-  box = document.createElement("button");
-  textAppear(dialogueTree[boxId].text);
 }
 
 function renderOptions(boxId){
@@ -97,5 +92,6 @@ window.onload = () => {
 function nextOption(boxId){
   document.getElementById("btn").remove();
   textAppear(dialogueTree[boxId].text);
+  console.log('went thru')
   renderOptions(boxId);
 }
