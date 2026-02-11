@@ -53,7 +53,6 @@ const dialogueTree = {
 }
 
 function startTalk() {
-  document.getElementById('btn').remove();
   document.getElementById("character").innerHTML = character1;
   nextOption("start");
 }
