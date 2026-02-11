@@ -1,34 +1,13 @@
-const character1 = [
-  "          .---.",
-  "         / __ /\\",
-  "        | /  `\\ |",
-  "        \\| . . |/",
-  "        (   _\\  )",
-  "         |  -  |",
-  "         \\  .  /",
-  "         |'---'|",
-  "        /'. _ .'\\",
-  "     .-`-._|_|_.-`-.",
-].join("\n")
-const character2 = [
-  "           .---.",
-  "         /` ___|`\\",
-  "         |_/    \\|",
-  "         (  -/-  )",
-  "          \\_ - _/",
-  "         .-'|_|'-.",
-  "        /         \\",
-  "       /     O     \\",
-  "      / _____!_____ \\",
-  "     /.-------------.\\"
-].join("\n")
+import { character1, character2 } from "./asciiArt.js";
+
+
 const dialogueTree = {
   start: {
     "id": "start",
-    "text": "Hello, how are you today?",
+    "text": "What's up?",
     "options": [
-      { "response": "I'm good, thanks!", "next": "node2" },
-      { "response": "A little busy, actually.", "next": "node3" }
+      { "response": "What time is it?", "next": "node2" },
+      { "response": "Nevermind.", "next": "end" }
     ]
   },
   node2: {
@@ -47,8 +26,10 @@ const dialogueTree = {
   },
   end: {
     "id": "end",
-    "text": "Conversation finished.",
-    "options": []
+    "text": "Ok bye.",
+    "options": [
+      { "response": "I have another question", "next": "start" }
+    ]
   }
 }
 
@@ -74,7 +55,7 @@ function renderOptions(boxId){
   dialogueTree[boxId].options.forEach(option => {
     newBox = document.createElement('button');
     newBox.innerHTML = option.response;
-    newBox.id = "btn";
+    newBox.className = "option-btn";
     newBox.onclick = () => nextOption(option.next);
     document.body.appendChild(newBox);
   });
@@ -89,8 +70,7 @@ window.onload = () => {
 }
 
 function nextOption(boxId){
-  document.getElementById("btn").remove();
+  Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
   textAppear(dialogueTree[boxId].text);
-  console.log('went thru')
   renderOptions(boxId);
 }
