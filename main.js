@@ -72,8 +72,16 @@ const dialogueTree = {
     "id": "node4",
     "text": "I'll tell you for $20.",
     "options": [
-      { "response": "You too.", "next": "end" },
+      { "response": "I can only give ten.", "next": "node5", "cost":10 },
       { "response": "I don't have any money.", "next": "end" }
+    ]
+  },
+    node5: {
+    "id": "node5",
+    "text": "I'll tell you the current minute.",
+    "options": [
+      { "response": "What?", "next": "end"},
+      { "response": "Give me back the money!", "next": "end" }
     ]
   },
   end: {
@@ -114,10 +122,16 @@ function renderOptions(boxId){
     newBox = document.createElement('button');
     newBox.innerHTML = option.response;
     newBox.className = "option-btn";
-    newBox.onclick = () => nextOption(option.next);
+    newBox.onclick = () => {
+      //if theres a "cost" property on the option subtracts that
+      if(option.cost){
+        updateMoney(-option.cost);
+      }
+      nextOption(option.next);
+    };
     document.body.appendChild(newBox);
-    
   });
+
   // newBox = document.createElement('button');
   // newBox.innerHTML = dialogueTree[boxId].options[0].response;
   // document.body.appendChild(newBox);
@@ -141,4 +155,10 @@ function showMoney(){
   moneyDisplay.innerHTML = "Money: $" + money;
   moneyDisplay.id = "money-display";
   document.body.appendChild(moneyDisplay);
+}
+
+updateMoney = (amount) => {
+  money += amount;
+  document.getElementById("money-display").remove();
+  showMoney();
 }
