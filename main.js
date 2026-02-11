@@ -1,5 +1,6 @@
 //ascii art
 const character1 = [
+  "friend:",
   "          .---.",
   "         / __ /\\",
   "        | /  `\\ |",
@@ -12,6 +13,7 @@ const character1 = [
   "     .-`-._|_|_.-`-.",
 ].join("\n")
 const character2 = [
+  "you:",
   "           .---.",
   "         /` ___|`\\",
   "         |_/    \\|",
@@ -83,9 +85,14 @@ const dialogueTree = {
   }
 }
 
+//variables
+let money = 10;
+
+
 //code to run the dialogue
 function startTalk() {
   document.getElementById("character").innerHTML = character1;
+  showMoney();
   nextOption("start");
 }
 
@@ -109,10 +116,12 @@ function renderOptions(boxId){
     newBox.className = "option-btn";
     newBox.onclick = () => nextOption(option.next);
     document.body.appendChild(newBox);
+    
   });
   // newBox = document.createElement('button');
   // newBox.innerHTML = dialogueTree[boxId].options[0].response;
   // document.body.appendChild(newBox);
+  showMoney();
 }
 
 window.onload = () => {
@@ -122,6 +131,14 @@ window.onload = () => {
 
 function nextOption(boxId){
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
+  document.getElementById("money-display").remove();
   textAppear(dialogueTree[boxId].text);
   renderOptions(boxId);
+}
+
+function showMoney(){
+  moneyDisplay = document.createElement("p");
+  moneyDisplay.innerHTML = "Money: $" + money;
+  moneyDisplay.id = "money-display";
+  document.body.appendChild(moneyDisplay);
 }
