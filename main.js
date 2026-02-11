@@ -24,13 +24,40 @@ const character2 = [
   "     /.-------------.\\"
 ].join("\n")
 
-window.onload = () => {
-  document.getElementById("character").innerHTML = character2;
+const dialogueTree = {
+  start: {
+    "id": "start",
+    "text": "Hello, how are you today?",
+    "options": [
+      { "response": "I'm good, thanks!", "next": "node2" },
+      { "response": "A little busy, actually.", "next": "node3" }
+    ]
+  },
+  node2: {
+    "id": "node2",
+    "text": "That's wonderful to hear!",
+    "options": [
+      { "response": "Goodbye.", "next": "end" }
+    ]
+  },
+  node3: {
+    "id": "node3",
+    "text": "Oh, I see. Well, have a good day!",
+    "options": [
+      { "response": "You too.", "next": "end" }
+    ]
+  },
+  end: {
+    "id": "end",
+    "text": "Conversation finished.",
+    "options": []
+  }
 }
 
 function talk() {
   document.getElementById("character").innerHTML = character1;
-  textAppear("blah blah");
+  console.log("clicked!");
+  textAppear(dialogueTree.start.text);
 }
 
 function textAppear(str){
@@ -38,10 +65,28 @@ function textAppear(str){
   i = 1;
 
   const interval = setInterval(()=>{
-    dialogue.innerHTML = str.substring(0,i)
+    dialogue.innerHTML = str.substring(0,i);
     i++;
     if(i>str.length){
       clearInterval(interval)
     }
   },50)
 }
+
+function createDialogueBox(boxId){
+  box = document.createElement("button");
+  textAppear(dialogueTree[boxId].text);
+}
+
+window.onload = () => {
+  document.getElementById("character").innerHTML = character2;
+  renderOptions("start")
+}
+
+function renderOptions(boxId){
+  //document.createElement('button').innerHTML = dialogueTree.boxId.options[0].response
+  //console.log(dialogueTree.boxId.options[0].response)
+
+  console.log(dialogueTree[boxId].options[0].response)
+}
+
