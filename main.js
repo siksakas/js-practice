@@ -10,7 +10,6 @@ const character1 = [
   "        /'. _ .'\\",
   "     .-`-._|_|_.-`-.",
 ].join("\n")
-
 const character2 = [
   "           .---.",
   "         /` ___|`\\",
@@ -23,7 +22,6 @@ const character2 = [
   "      / _____!_____ \\",
   "     /.-------------.\\"
 ].join("\n")
-
 const dialogueTree = {
   start: {
     "id": "start",
@@ -55,10 +53,9 @@ const dialogueTree = {
 }
 
 function talk() {
+  document.getElementById('btn').remove();
   document.getElementById("character").innerHTML = character1;
   renderOptions("start");
-  //textAppear(dialogueTree.start.text);
-  //renderOptions("start");
 }
 
 function textAppear(str){
@@ -79,14 +76,26 @@ function createDialogueBox(boxId){
   textAppear(dialogueTree[boxId].text);
 }
 
+function renderOptions(boxId){
+  dialogueTree[boxId].options.forEach(option => {
+    newBox = document.createElement('button');
+    newBox.innerHTML = option.response;
+    newBox.id = "btn";
+    newBox.onclick = () => nextOption(option.next);
+    document.body.appendChild(newBox);
+  });
+  // newBox = document.createElement('button');
+  // newBox.innerHTML = dialogueTree[boxId].options[0].response;
+  // document.body.appendChild(newBox);
+}
+
 window.onload = () => {
   document.getElementById("character").innerHTML = character2;
-  textAppear(dialogueTree.start.text);
+  
 }
 
-function renderOptions(boxId){
-  newBox = document.createElement('button');
-  newBox.innerHTML = dialogueTree[boxId].options[0].response;
-  document.body.appendChild(newBox);
+function nextOption(boxId){
+  document.getElementById("btn").remove();
+  textAppear(dialogueTree[boxId].text);
+  renderOptions(boxId);
 }
-
