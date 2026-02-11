@@ -1,6 +1,47 @@
-import { character1, character2 } from "./asciiArt.js";
+//ascii art
+const character1 = [
+  "          .---.",
+  "         / __ /\\",
+  "        | /  `\\ |",
+  "        \\| . . |/",
+  "        (   _\\  )",
+  "         |  -  |",
+  "         \\  .  /",
+  "         |'---'|",
+  "        /'. _ .'\\",
+  "     .-`-._|_|_.-`-.",
+].join("\n")
+const character2 = [
+  "           .---.",
+  "         /` ___|`\\",
+  "         |_/    \\|",
+  "         (  -/-  )",
+  "          \\_ - _/",
+  "         .-'|_|'-.",
+  "        /         \\",
+  "       /     O     \\",
+  "      / _____!_____ \\",
+  "     /.-------------.\\"
+].join("\n")
+const door = [
+  "______________",
+  "|\\ ___________ /|",
+  "| |  _ _ _ _  | |",
+  "| | | | | | | | |",
+  "| | |-+-+-+-| | |",
+  "| | |-+-+=+%| | |",
+  "| | |_|_|_|_| | |",
+  "| |    ___    | |",
+  "| |   [___] ()| |",
+  "| |         ||| |",
+  "| |         ()| |",
+  "| |           | |",
+  "| |           | |",
+  "| |           | |",
+  "|_|___________|_| ejm"
+].join("\n");
 
-
+//dialogue tree
 const dialogueTree = {
   start: {
     "id": "start",
@@ -33,6 +74,7 @@ const dialogueTree = {
   }
 }
 
+//code to run the dialogue
 function startTalk() {
   document.getElementById("character").innerHTML = character1;
   nextOption("start");
@@ -65,8 +107,8 @@ function renderOptions(boxId){
 }
 
 window.onload = () => {
-  document.getElementById("character").innerHTML = character2;
-  
+  textAppear('I wonder what time it is, maybe I should ask my friend...')
+  document.getElementById("character").innerHTML = door;
 }
 
 function nextOption(boxId){
