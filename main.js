@@ -1,5 +1,4 @@
 const character1 = [
-  "character 1:",
   "          .---.",
   "         / __ /\\",
   "        | /  `\\ |",
@@ -10,11 +9,9 @@ const character1 = [
   "         |'---'|",
   "        /'. _ .'\\",
   "     .-`-._|_|_.-`-.",
-  "    /`    \\   /     `\\"
 ].join("\n")
 
 const character2 = [
-  "character 2:",
   "           .---.",
   "         /` ___|`\\",
   "         |_/    \\|",
@@ -32,5 +29,19 @@ window.onload = () => {
 }
 
 function talk() {
+  document.getElementById("character").innerHTML = character1;
+  textAppear("blah blah");
+}
 
+function textAppear(str){
+  dialogue = document.getElementById('dialogue-box');
+  i = 1;
+
+  const interval = setInterval(()=>{
+    dialogue.innerHTML = str.substring(0,i)
+    i++;
+    if(i>str.length){
+      clearInterval(interval)
+    }
+  },50)
 }
