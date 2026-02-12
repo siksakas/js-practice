@@ -186,7 +186,7 @@ const dialogueTree = {
   },
   storeLoan1: {
     "id": "storeLoan1",
-    "text": "I can give you 30 minutes now. Interest is 45 minutes by sundown.",
+    "text": "I can give you 30 minutes now. Interest is 45 minutes.",
     "options": [
       { "response": "Deal.", "next": "storeLoanDeal", "time": 30 * 60 },
       { "response": "Any safer option?", "next": "storeLoan2" },
