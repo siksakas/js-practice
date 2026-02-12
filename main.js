@@ -1,3 +1,13 @@
+let x = 0;
+let remainingSeconds = 60 * 60;
+
+const formatCountdown = (seconds) => {
+  const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+  const secs = String(seconds % 60).padStart(2, "0");
+  return `${hours}:${minutes}:${secs}`;
+};
+
 //ascii art
 const character1 = [
   "friend:",
@@ -61,16 +71,16 @@ const dialogueTree = {
     "id": "start",
     "text": "What's up?",
     "options": [
-      { "response": "My clock is broken.", "next": "node2" },
+      { "response": "I'm running out of time.", "next": "node2" },
       { "response": "Nevermind", "next": "end" }
     ]
   },
   node2: {
     "id": "node2",
-    "text": "Why should I help you?",
+    "text": "How much do you need?",
     "options": [
-      { "response": "I just wanna know the time.", "next": "node4" },
-      { "response": "You're no help...", "next": "end" }
+      { "response": "A couple hours.", "next": "node4" },
+      { "response": "Nevermind.", "next": "end" }
     ]
   },
   node3: {
@@ -82,18 +92,18 @@ const dialogueTree = {
   },
   node4: {
     "id": "node4",
-    "text": "I'll help you for $20.",
+    "text": "Give me ten minutes now and I'll see what I can do.",
     "options": [
-      { "response": "I've got ten.", "next": "node5", "cost": 10 },
+      { "response": "Here you go.", "next": "node5", "time": -10*60 },
       { "response": "I'm not paying you!.", "next": "end" }
     ]
   },
   node5: {
     "id": "node5",
-    "text": "Yeah idk how to fix that.",
+    "text": "Yeah I'll get back to you on that.",
     "options": [
       { "response": "What?", "next": "end" },
-      { "response": "Give me back the money!", "next": "end" }
+      { "response": "Hey!", "next": "end" }
     ]
   },
   end: {
@@ -107,27 +117,24 @@ const dialogueTree = {
     "id": "node6",
     "text": "Where should I go?",
     "options": [
-      { "response": "Clock repair store.", "next": "store1", "sprite": merchant },
-      { "response": "The magic forest.", "next": "end" }
+      { "response": "Shop.", "next": "store1", "sprite": merchant },
+      { "response": "Work.", "next": "end" }
     ]
   },
-    store1: {
+  store1: {
     "id": "store1",
     "text": "How can I help you?",
     "options": [
-      { "response": "My clock is broken", "next": "end" }
+      { "response": "I need to borrow some time.", "next": "end" },
+      { "response": "What do you have for sale?", "next": "end" },
+      { "response": "Nevermind", "next": "node6","sprite": character2 }
     ]
   }
 }
 
-//variables
-let money = 10;
-
-
 //code to run the dialogue
 function startTalk() {
   document.getElementById("character").innerHTML = character1;
-  showMoney();
   nextOption("start");
 }
 
@@ -151,8 +158,9 @@ function renderOptions(boxId) {
     newBox.className = "option-btn";
     newBox.onclick = () => {
       //if theres a "cost" property on the option subtracts that
-      if (option.cost) {
-        updateMoney(-option.cost);
+      if (option.time) {
+        remainingSeconds += option.time;
+        document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
       }
       if (option.sprite) {
         document.getElementById("character").innerHTML = option.sprite;
@@ -165,20 +173,9 @@ function renderOptions(boxId) {
   // newBox = document.createElement('button');
   // newBox.innerHTML = dialogueTree[boxId].options[0].response;
   // document.body.appendChild(newBox);
-  showMoney();
 }
 
 window.onload = () => {
-  let x = 0;
-  let remainingSeconds = 60 * 60;
-
-  const formatCountdown = (seconds) => {
-    const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
-    const secs = String(seconds % 60).padStart(2, "0");
-    return `${hours}:${minutes}:${secs}`;
-  };
-
   document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
 
   clock = setInterval(() => {
@@ -191,7 +188,7 @@ window.onload = () => {
     document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
 
     if (x == 6) {
-      textAppear('Why did the clock stop working? Better ask my friend.')
+      textAppear("I've only got an hour left... I need to borrow some time.");
     }
     if (x == 9) {
       console.log("triggered at x = " + x);
@@ -208,20 +205,6 @@ window.onload = () => {
 
 function nextOption(boxId) {
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
-  document.getElementById("money-display").remove();
   textAppear(dialogueTree[boxId].text);
   renderOptions(boxId);
-}
-
-function showMoney() {
-  moneyDisplay = document.createElement("p");
-  moneyDisplay.innerHTML = "Money: $" + money;
-  moneyDisplay.id = "money-display";
-  document.body.appendChild(moneyDisplay);
-}
-
-updateMoney = (amount) => {
-  money += amount;
-  document.getElementById("money-display").remove();
-  showMoney();
 }
