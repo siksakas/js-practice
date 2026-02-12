@@ -170,20 +170,31 @@ function renderOptions(boxId) {
 
 window.onload = () => {
   let x = 0;
+  let remainingSeconds = 60 * 60;
+
+  const formatCountdown = (seconds) => {
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${hours}:${minutes}:${secs}`;
+  };
+
+  document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
+
   clock = setInterval(() => {
     x++;
     console.log(x);
 
-    if (x < 5) {
-      let date = new Date()
-      document.getElementById("clock").innerHTML = date.toLocaleTimeString();
+    if (remainingSeconds > 0) {
+      remainingSeconds--;
     }
+    document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
+
     if (x == 6) {
       textAppear('Why did the clock stop working? Better ask my friend.')
     }
     if (x == 9) {
       console.log("triggered at x = " + x);
-      clearInterval(clock);
       document.getElementById("character").innerHTML = door;
       enterButton = document.createElement("button");
       enterButton.innerHTML = "Enter";
