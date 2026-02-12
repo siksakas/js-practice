@@ -42,6 +42,18 @@ const door = [
   "| |           | |",
   "|_|___________|_| ejm"
 ].join("\n");
+const merchant = [
+  "            ,-----.",
+  "           #,-. ,-.#",
+  "          () a   e ()",
+  "          (   (_)   )",
+  "          #\\_  -  _/#",
+  "        ,'   `\"\"\"`    `.",
+  "      ,'      \\X/      `.",
+  "     /         X     ____\\",
+  "    /          v   ,`  v  `,",
+  "   /    /         ( <==+==> )"
+].join("\n");
 
 //dialogue tree
 const dialogueTree = {
@@ -95,8 +107,15 @@ const dialogueTree = {
     "id": "node6",
     "text": "Where should I go?",
     "options": [
-      { "response": "Clock repair store.", "next": "end" },
+      { "response": "Clock repair store.", "next": "store1", "sprite": merchant },
       { "response": "The magic forest.", "next": "end" }
+    ]
+  },
+    store1: {
+    "id": "store1",
+    "text": "How can I help you?",
+    "options": [
+      { "response": "My clock is broken", "next": "end" }
     ]
   }
 }
