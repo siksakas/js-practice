@@ -160,11 +160,96 @@ const dialogueTree = {
   },
   store1: {
     "id": "store1",
-    "text": "How can I help you?",
+    "text": "What are you looking for?",
     "options": [
-      { "response": "I need to borrow some time.", "next": "end" },
-      { "response": "What do you have for sale?", "next": "end" },
+      { "response": "I need to borrow some time.", "next": "storeLoan1" },
+      { "response": "What do you have for sale?", "next": "storeGoods1" },
+      { "response": "Why is everyone paying with time?", "next": "storeLore1" },
       { "response": "Nevermind", "next": "node6", "sprite": character2 }
+    ]
+  },
+  storeLore1: {
+    "id": "storeLore1",
+    "text": "No idea!",
+    "options": [
+      { "response": "So the poor literally die younger?", "next": "storeLore2" },
+      { "response": "I'm running out of time.", "next": "storeLoan1" }
+    ]
+  },
+  storeLore2: {
+    "id": "storeLore2",
+    "text": "Yeah not me though!",
+    "options": [
+      { "response": "I just need enough time to survive today.", "next": "storeLoan1" },
+      { "response": "What can I buy instead?", "next": "storeGoods1" }
+    ]
+  },
+  storeLoan1: {
+    "id": "storeLoan1",
+    "text": "I can give you 30 minutes now. Interest is 45 minutes by sundown.",
+    "options": [
+      { "response": "Deal.", "next": "storeLoanDeal", "time": 30 * 60 },
+      { "response": "Any safer option?", "next": "storeLoan2" },
+      { "response": "No thanks.", "next": "store1" }
+    ]
+  },
+  storeLoan2: {
+    "id": "storeLoan2",
+    "text": "If you've got something valuable to trade, I can give you time for it.",
+    "options": [
+      { "response": "Take my watch.", "next": "storeMemoryDeal", "time": 20 * 60 },
+      { "response": "I like the previous deal better.", "next": "storeLoan1" },
+      { "response": "Let me see what's for sale.", "next": "storeGoods1" }
+    ]
+  },
+  storeLoanDeal: {
+    "id": "storeLoanDeal",
+    "text": "Don't be late repaying me.",
+    "options": [
+      { "response": "I'll try.", "next": "node6", "sprite": character2 },
+      { "response": "What else can I do here?", "next": "store1" }
+    ]
+  },
+  storeMemoryDeal: {
+    "id": "storeMemoryDeal",
+    "text": "Done.",
+    "options": [
+      { "response": "I can live with that.", "next": "node6", "sprite": character2 },
+      { "response": "Tell me what else you sell.", "next": "storeGoods1" }
+    ]
+  },
+  storeGoods1: {
+    "id": "storeGoods1",
+    "text": "Here's what I have for sale.",
+    "options": [
+      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60 },
+      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60 },
+      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60 },
+      { "response": "Back.", "next": "store1" }
+    ]
+  },
+  storeGoodsTransit: {
+    "id": "storeGoodsTransit",
+    "text": "You can take this train ticket to leave the city.",
+    "options": [
+      { "response": "Perfect.", "next": "storeGoods1" },
+      { "response": "I'm heading out.", "next": "node6", "sprite": character2 }
+    ]
+  },
+  storeGoodsTea: {
+    "id": "storeGoodsTea",
+    "text": "Green tea is pretty good",
+    "options": [
+      { "response": "Let me see what else you have.", "next": "storeGoods1" },
+      { "response": "Thanks, I'm leaving.", "next": "node6", "sprite": character2 }
+    ]
+  },
+  storeGoodsFood: {
+    "id": "storeGoodsFood",
+    "text": "This ones my favorite.",
+    "options": [
+      { "response": "Thanks!", "next": "node6", "sprite": character2 },
+      { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
     ]
   }
 }
