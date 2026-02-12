@@ -65,6 +65,19 @@ const merchant = [
   "   /    /         ( <==+==> )"
 ].join("\n");
 
+const officer = [
+  "officer:",
+  "                ,",
+  "       __  _.-\"` `\'-.",
+  "      /||\\'._ __{}_(",
+  "      ||||  |'--.__\\",
+  "      |  L.(   ^_\\^",
+  "      \\ .-' |   _ |",
+  "      | |   )\\___/",
+  "      |  \\-'`:._]",
+  "  jgs \\__/;      '-.",
+].join("\n");
+
 //dialogue tree
 const dialogueTree = {
   start: {
@@ -94,7 +107,7 @@ const dialogueTree = {
     "id": "node4",
     "text": "Give me ten minutes now and I'll see what I can do.",
     "options": [
-      { "response": "Here you go.", "next": "node5", "time": -10*60 },
+      { "response": "Here you go.", "next": "node5", "time": -10 * 60 },
       { "response": "I'm not paying you!.", "next": "end" }
     ]
   },
@@ -118,7 +131,31 @@ const dialogueTree = {
     "text": "Where should I go?",
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
-      { "response": "Work.", "next": "end" }
+      { "response": "Work.", "next": "work1", "sprite": officer }
+    ]
+  },
+  work1: {
+    "id": "work1",
+    "text": "You're running late. Do you have a good excuse?",
+    "options": [
+      { "response": "Missed the bus this morning.", "next": "work2" },
+      { "response": "Can I get an advance on my pay?", "next": "work3", "time": 2 * 60 }
+    ]
+  },
+  work2: {
+    "id": "work2",
+    "text": "I don't believe you. You're fired!",
+    "options": [
+      { "response": "But I have a good excuse!", "next": "end" },
+      { "response": "I'll be more careful next time.", "next": "end" }
+    ]
+  },
+  work3: {
+    "id": "work3",
+    "text": "Just don't let it happen again.",
+    "options": [
+      { "response": "Can I have a little more?", "next": "end" },
+      { "response": "I'll be more careful next time.", "next": "end" }
     ]
   },
   store1: {
@@ -127,7 +164,7 @@ const dialogueTree = {
     "options": [
       { "response": "I need to borrow some time.", "next": "end" },
       { "response": "What do you have for sale?", "next": "end" },
-      { "response": "Nevermind", "next": "node6","sprite": character2 }
+      { "response": "Nevermind", "next": "node6", "sprite": character2 }
     ]
   }
 }
