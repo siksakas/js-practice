@@ -49,16 +49,16 @@ const dialogueTree = {
     "id": "start",
     "text": "What's up?",
     "options": [
-      { "response": "What time is it?", "next": "node2" },
-      { "response": "Nevermind.", "next": "end" }
+      { "response": "My clock is broken.", "next": "node2" },
+      { "response": "Nevermind", "next": "end" }
     ]
   },
   node2: {
     "id": "node2",
-    "text": "Why should I tell you?",
+    "text": "Why should I help you?",
     "options": [
       { "response": "I just wanna know the time.", "next": "node4" },
-      { "response": "You're no help... (leave)", "next": "end" }
+      { "response": "You're no help...", "next": "end" }
     ]
   },
   node3: {
@@ -70,15 +70,15 @@ const dialogueTree = {
   },
   node4: {
     "id": "node4",
-    "text": "I'll tell you for $20.",
+    "text": "I'll help you for $20.",
     "options": [
-      { "response": "I can only give ten.", "next": "node5", "cost": 10 },
-      { "response": "I don't have any money.", "next": "end" }
+      { "response": "I've got ten.", "next": "node5", "cost": 10 },
+      { "response": "I'm not paying you!.", "next": "end" }
     ]
   },
   node5: {
     "id": "node5",
-    "text": "I'll tell you the current minute.",
+    "text": "Yeah idk how to fix that.",
     "options": [
       { "response": "What?", "next": "end" },
       { "response": "Give me back the money!", "next": "end" }
@@ -88,7 +88,15 @@ const dialogueTree = {
     "id": "end",
     "text": "Ok bye.",
     "options": [
-      { "response": "I have another question", "next": "start" }
+      { "response": "(leave)", "next": "node6", "sprite": character2 }
+    ]
+  },
+  node6: {
+    "id": "node6",
+    "text": "Where should I go?",
+    "options": [
+      { "response": "Clock repair store.", "next": "end" },
+      { "response": "The magic forest.", "next": "end" }
     ]
   }
 }
@@ -127,6 +135,9 @@ function renderOptions(boxId) {
       if (option.cost) {
         updateMoney(-option.cost);
       }
+      if (option.sprite) {
+        document.getElementById("character").innerHTML = option.sprite;
+      }
       nextOption(option.next);
     };
     document.body.appendChild(newBox);
@@ -141,28 +152,28 @@ function renderOptions(boxId) {
 window.onload = () => {
   let x = 0;
   clock = setInterval(() => {
-  x++;
-  console.log(x);
+    x++;
+    console.log(x);
 
-  if (x < 5) {
-    let date = new Date()
-    document.getElementById("clock").innerHTML = date.toLocaleTimeString();
-  }
-  if (x == 6) {
-    textAppear('Why did the clock stop working? Better ask my friend.')
-  }
-  if (x==9){
-    console.log("triggered at x = " + x);
-    clearInterval(clock);
-    document.getElementById("character").innerHTML = door;
-    enterButton = document.createElement("button");
-    enterButton.innerHTML = "Enter";
-    enterButton.className = "option-btn";
-    enterButton.onclick = startTalk;
-    document.body.appendChild(enterButton);
-  }
-}, 1000)
-  
+    if (x < 5) {
+      let date = new Date()
+      document.getElementById("clock").innerHTML = date.toLocaleTimeString();
+    }
+    if (x == 6) {
+      textAppear('Why did the clock stop working? Better ask my friend.')
+    }
+    if (x == 9) {
+      console.log("triggered at x = " + x);
+      clearInterval(clock);
+      document.getElementById("character").innerHTML = door;
+      enterButton = document.createElement("button");
+      enterButton.innerHTML = "Enter";
+      enterButton.className = "option-btn";
+      enterButton.onclick = startTalk;
+      document.body.appendChild(enterButton);
+    }
+  }, 1000)
+
 }
 
 function nextOption(boxId) {
