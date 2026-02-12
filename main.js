@@ -72,15 +72,15 @@ const dialogueTree = {
     "id": "node4",
     "text": "I'll tell you for $20.",
     "options": [
-      { "response": "I can only give ten.", "next": "node5", "cost":10 },
+      { "response": "I can only give ten.", "next": "node5", "cost": 10 },
       { "response": "I don't have any money.", "next": "end" }
     ]
   },
-    node5: {
+  node5: {
     "id": "node5",
     "text": "I'll tell you the current minute.",
     "options": [
-      { "response": "What?", "next": "end"},
+      { "response": "What?", "next": "end" },
       { "response": "Give me back the money!", "next": "end" }
     ]
   },
@@ -104,27 +104,27 @@ function startTalk() {
   nextOption("start");
 }
 
-function textAppear(str){
+function textAppear(str) {
   dialogue = document.getElementById('dialogue-box');
   i = 1;
 
-  const interval = setInterval(()=>{
-    dialogue.innerHTML = str.substring(0,i);
+  const interval = setInterval(() => {
+    dialogue.innerHTML = str.substring(0, i);
     i++;
-    if(i>str.length){
+    if (i > str.length) {
       clearInterval(interval)
     }
-  },30)
+  }, 30)
 }
 
-function renderOptions(boxId){
+function renderOptions(boxId) {
   dialogueTree[boxId].options.forEach(option => {
     newBox = document.createElement('button');
     newBox.innerHTML = option.response;
     newBox.className = "option-btn";
     newBox.onclick = () => {
       //if theres a "cost" property on the option subtracts that
-      if(option.cost){
+      if (option.cost) {
         updateMoney(-option.cost);
       }
       nextOption(option.next);
@@ -139,18 +139,40 @@ function renderOptions(boxId){
 }
 
 window.onload = () => {
-  textAppear('I wonder what time it is, maybe I should ask my friend...')
-  document.getElementById("character").innerHTML = door;
+  let x = 0;
+  clock = setInterval(() => {
+  x++;
+  console.log(x);
+
+  if (x < 5) {
+    let date = new Date()
+    document.getElementById("clock").innerHTML = date.toLocaleTimeString();
+  }
+  if (x == 6) {
+    textAppear('Why did the clock stop working? Better ask my friend.')
+  }
+  if (x==9){
+    console.log("triggered at x = " + x);
+    clearInterval(clock);
+    document.getElementById("character").innerHTML = door;
+    enterButton = document.createElement("button");
+    enterButton.innerHTML = "Enter";
+    enterButton.className = "option-btn";
+    enterButton.onclick = startTalk;
+    document.body.appendChild(enterButton);
+  }
+}, 1000)
+  
 }
 
-function nextOption(boxId){
+function nextOption(boxId) {
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
   document.getElementById("money-display").remove();
   textAppear(dialogueTree[boxId].text);
   renderOptions(boxId);
 }
 
-function showMoney(){
+function showMoney() {
   moneyDisplay = document.createElement("p");
   moneyDisplay.innerHTML = "Money: $" + money;
   moneyDisplay.id = "money-display";
