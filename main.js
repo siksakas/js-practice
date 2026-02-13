@@ -1,6 +1,10 @@
 let x = 0;
 let remainingSeconds = 60 * 60;
-
+//TODO: Create a log of time transactions and display it in the UI
+//TODO: Inventory system for items that can be traded for time
+//TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
+let inventory = ["Watch"];
+// bug: clicking the option before it fully runs appeartext with bug it out.
 const formatCountdown = (seconds) => {
   const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -64,7 +68,6 @@ const merchant = [
   "    /          v   ,`  v  `,",
   "   /    /         ( <==+==> )"
 ].join("\n");
-
 const officer = [
   "officer:",
   "                ,",
@@ -76,6 +79,23 @@ const officer = [
   "      | |   )\\___/",
   "      |  \\-'`:._]",
   "  jgs \\__/;      '-.",
+].join("\n");
+const worker = [
+  "                  _A",
+  "                .'`\"'`,",
+  "               /   , , \\",
+  "              |   <\\^/> |",
+  "              |  < (_) >|",
+  "              /====\\",
+  "             (.--._ _.--.)",
+  "              |\\  -`\\- /|",
+  "              |(_.- >-.)|",
+  "              \\__.-'^'._/",
+  "               |\\   .  /",
+  "            _.'\\ '----'|'-.",
+  "        _.-'  O ;-.__.' \\O `o.",
+  "       /o \\      \\/-.-\\/|     \\",
+  "   jgs|    ;,     '.|\\| /"
 ].join("\n");
 
 //dialogue tree
@@ -131,7 +151,8 @@ const dialogueTree = {
     "text": "Where should I go?",
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
-      { "response": "Work.", "next": "work1", "sprite": officer }
+      { "response": "Work.", "next": "work1", "sprite": officer },
+      { "response": "City.", "next": "CITY" }
     ]
   },
   work1: {
@@ -197,7 +218,7 @@ const dialogueTree = {
     "id": "storeLoan2",
     "text": "If you've got something valuable to trade, I can give you time for it.",
     "options": [
-      { "response": "Take my watch.", "next": "storeMemoryDeal", "time": 20 * 60 },
+      { "response": "Take my watch.", "next": "storeMemoryDeal", "time": 20 * 60, "removeItem": "Watch", "requiresItem": "Watch" },
       { "response": "I like the previous deal better.", "next": "storeLoan1" },
       { "response": "Let me see what's for sale.", "next": "storeGoods1" }
     ]
@@ -222,7 +243,7 @@ const dialogueTree = {
     "id": "storeGoods1",
     "text": "Here's what I have for sale.",
     "options": [
-      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60 },
+      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60,"addItem":"Ticket" },
       { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60 },
       { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60 },
       { "response": "Back.", "next": "store1" }
@@ -251,6 +272,22 @@ const dialogueTree = {
       { "response": "Thanks!", "next": "node6", "sprite": character2 },
       { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
     ]
+  },
+  CITY: {
+    "id": "CITY",
+    "text": "Where should I go now?",
+    "options": [
+      { "response": "Train station", "next": "train", "sprite": worker },
+      { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
+    ]
+  },
+  train: {
+    "id": "CITY",
+    "text": "You need a ticket to board.",
+    "options": [
+      { "response": "Train station", "next": "node6","requiresItem":"Ticket"},
+      { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
+    ]
   }
 }
 
@@ -275,21 +312,31 @@ function textAppear(str) {
 
 function renderOptions(boxId) {
   dialogueTree[boxId].options.forEach(option => {
-    newBox = document.createElement('button');
-    newBox.innerHTML = option.response;
-    newBox.className = "option-btn";
-    newBox.onclick = () => {
-      //if theres a "cost" property on the option subtracts that
-      if (option.time) {
-        remainingSeconds += option.time;
-        document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
-      }
-      if (option.sprite) {
-        document.getElementById("character").innerHTML = option.sprite;
-      }
-      nextOption(option.next);
-    };
-    document.body.appendChild(newBox);
+    if (!option.requiresItem || hasItem(option.requiresItem)) {
+      newBox = document.createElement('button');
+      newBox.innerHTML = option.response;
+      newBox.className = "option-btn";
+      newBox.onclick = () => {
+        //if theres a "cost" property on the option subtracts that
+        if (option.time) {
+          remainingSeconds += option.time;
+          document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
+        }
+        if (option.sprite) {
+          document.getElementById("character").innerHTML = option.sprite;
+        }
+        if (option.removeItem) {
+          removeInventory(option.removeItem);
+          createInventoryUI();
+        }
+        if (option.addItem){
+          addInventory(option.addItem);
+          createInventoryUI();
+        }
+        nextOption(option.next);
+      };
+      document.body.appendChild(newBox);
+    }
   });
 
   // newBox = document.createElement('button');
@@ -320,6 +367,7 @@ window.onload = () => {
       enterButton.className = "option-btn";
       enterButton.onclick = startTalk;
       document.body.appendChild(enterButton);
+      createInventoryUI();
     }
   }, 1000)
 
@@ -329,4 +377,21 @@ function nextOption(boxId) {
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
   textAppear(dialogueTree[boxId].text);
   renderOptions(boxId);
+}
+
+function addInventory(item) {
+  inventory.push(item);
+}
+
+function hasItem(item) {
+  return inventory.includes(item);
+}
+
+function removeInventory(item) {
+  inventory = inventory.filter(i => i !== item);
+}
+
+function createInventoryUI() {
+  const inventoryDiv = document.getElementById("inventory");
+  inventoryDiv.innerHTML = "Inventory: " + inventory.join(", ");
 }
