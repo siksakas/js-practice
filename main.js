@@ -97,6 +97,28 @@ const worker = [
   "       /o \\      \\/-.-\\/|     \\",
   "   jgs|    ;,     '.|\\| /"
 ].join("\n");
+const cat = [
+  "/)",
+  "                  ((",
+  "                   ))",
+  "              ,   //,",
+  "             /,\\=\"=/,\\",
+  "            /` d   b `\\",
+  "           =\\:.  Y  .:/=",
+  "            /'***o***'\\",
+  "           ( (       ) )",
+  "     jgs   (,,)'-=-'(,,)"
+].join("\n");
+const train = [
+  "         (",
+  "     '( '",
+  "    '  //}",
+  "   ( ''\"",
+  "   _||__ ____ ____ ____",
+  "  (o)___)}___}}___}}___}",
+  "  'U'0 0  0 0  0 0  0 0  :dg:"
+].join("\n");
+
 
 //dialogue tree
 const dialogueTree = {
@@ -243,9 +265,9 @@ const dialogueTree = {
     "id": "storeGoods1",
     "text": "Here's what I have for sale.",
     "options": [
-      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60,"addItem":"Ticket" },
-      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60,"addItem":"Tea" },
-      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60,"addItem":"Frozen Food" },
+      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60, "addItem": "Ticket" },
+      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60, "addItem": "Tea" },
+      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60, "addItem": "Frozen Food" },
       { "response": "Back.", "next": "store1" }
     ]
   },
@@ -278,15 +300,24 @@ const dialogueTree = {
     "text": "Where should I go now?",
     "options": [
       { "response": "Train station", "next": "train", "sprite": worker },
-      { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
+      { "response": "Maybe I should buy something else.", "next": "storeGoods1" },
+      { "response": "Town", "next": "node6" }
     ]
   },
   train: {
-    "id": "CITY",
+    "id": "train",
     "text": "You need a ticket to board.",
     "options": [
-      { "response": "Train station", "next": "node6","requiresItem":"Ticket"},
-      { "response": "Maybe I should buy something else.", "next": "storeGoods1" }
+      { "response": "Board", "next": "train2", "requiresItem": "Ticket", "sprite": train },
+      { "response": "I haven't got one.", "next": "CITY", "sprite": character2 }
+    ]
+  },
+  train2: {
+    "id": "train",
+    "text": "This trip will take you out of the city, it'll last 30 minutes.",
+    "options": [
+      { "response": "Continue", "next": "node6", "removeItem": "Ticket","time": -30*60},
+      { "response": "Nevermind.", "next": "CITY", "sprite": character2 }
     ]
   }
 }
@@ -329,7 +360,7 @@ function renderOptions(boxId) {
           removeInventory(option.removeItem);
           createInventoryUI();
         }
-        if (option.addItem){
+        if (option.addItem) {
           addInventory(option.addItem);
           createInventoryUI();
         }
