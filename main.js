@@ -1,5 +1,6 @@
 let x = 0;
 let remainingSeconds = 60 * 60;
+let dialogueIntervalId = null;
 //TODO: Create a log of time transactions and display it in the UI
 //TODO: Inventory system for items that can be traded for time
 //TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
@@ -329,16 +330,23 @@ function startTalk() {
 }
 
 function textAppear(str) {
-  dialogue = document.getElementById('dialogue-box');
-  i = 1;
+  const dialogue = document.getElementById("dialogue-box");
 
-  const interval = setInterval(() => {
+  if (dialogueIntervalId) {
+    clearInterval(dialogueIntervalId);
+  }
+
+  let i = 1;
+  dialogue.innerHTML = "";
+
+  dialogueIntervalId = setInterval(() => {
     dialogue.innerHTML = str.substring(0, i);
     i++;
     if (i > str.length) {
-      clearInterval(interval)
+      clearInterval(dialogueIntervalId);
+      dialogueIntervalId = null;
     }
-  }, 30)
+  }, 30);
 }
 
 function renderOptions(boxId) {
