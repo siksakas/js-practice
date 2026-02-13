@@ -244,8 +244,8 @@ const dialogueTree = {
     "text": "Here's what I have for sale.",
     "options": [
       { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60,"addItem":"Ticket" },
-      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60 },
-      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60 },
+      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60,"addItem":"Tea" },
+      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60,"addItem":"Frozen Food" },
       { "response": "Back.", "next": "store1" }
     ]
   },
