@@ -18,11 +18,15 @@ const getCountdownEndTime = (secondsFromNow) => {
   // add countdown
   const endTime = new Date(now + secondsFromNow * 1000);
 
-  const hours = String(endTime.getHours()).padStart(2, "0");
+  let hours = endTime.getHours();
   const minutes = String(endTime.getMinutes()).padStart(2, "0");
   const seconds = String(endTime.getSeconds()).padStart(2, "0");
+  
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Convert to 12-hour format (0 becomes 12)
+  const hoursStr = String(hours).padStart(2, "0");
 
-  return `${hours}:${minutes}:${seconds}`;
+  return `${hoursStr}:${minutes}:${seconds} ${ampm}`;
 };
 
 //ascii art
@@ -155,7 +159,7 @@ const dialogueTree = {
     "id": "node3",
     "text": `I'll run out of time at ${getCountdownEndTime(remainingSeconds)}`,
     "options": [
-      { "response": "You too.", "next": "end" }
+      { "response": "Back", "next": "node6" }
     ]
   },
   node4: {
@@ -314,8 +318,7 @@ const dialogueTree = {
     "text": "Where should I go now?",
     "options": [
       { "response": "Train station", "next": "train", "sprite": worker },
-      { "response": "Maybe I should buy something else.", "next": "storeGoods1" },
-      { "response": "Town", "next": "node6" }
+      { "response": "Town.", "next": "node6" }
     ]
   },
   train: {
