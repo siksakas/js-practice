@@ -11,6 +11,20 @@ const formatCountdown = (seconds) => {
   return `${hours}:${minutes}:${secs}`;
 };
 
+const getCountdownEndTime = (secondsFromNow) => {
+  // current time
+  const now = Date.now();
+
+  // add countdown
+  const endTime = new Date(now + secondsFromNow * 1000);
+
+  const hours = String(endTime.getHours()).padStart(2, "0");
+  const minutes = String(endTime.getMinutes()).padStart(2, "0");
+  const seconds = String(endTime.getSeconds()).padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
+};
+
 //ascii art
 const character1 = [
   "friend:",
@@ -139,7 +153,7 @@ const dialogueTree = {
   },
   node3: {
     "id": "node3",
-    "text": "Oh, I see. Well, have a good day!",
+    "text": `I'll run out of time at ${getCountdownEndTime(remainingSeconds)}`,
     "options": [
       { "response": "You too.", "next": "end" }
     ]
@@ -173,7 +187,8 @@ const dialogueTree = {
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
       { "response": "Work.", "next": "work1", "sprite": officer },
-      { "response": "City.", "next": "CITY" }
+      { "response": "City.", "next": "CITY" },
+      { "response": "Check watch.", "next": "node3", requiresItem: "Watch" }
     ]
   },
   work1: {
