@@ -2,10 +2,8 @@ let x = 0;
 let remainingSeconds = 60 * 60;
 let dialogueIntervalId = null;
 //TODO: Create a log of time transactions and display it in the UI
-//TODO: Inventory system for items that can be traded for time
 //TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
 let inventory = ["Watch"];
-// bug: clicking the option before it fully runs appeartext with bug it out.
 const formatCountdown = (seconds) => {
   const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -395,10 +393,10 @@ window.onload = () => {
     }
     document.getElementById("clock").innerHTML = formatCountdown(remainingSeconds);
 
-    if (x == 6) {
+    if (x == 3) {
       textAppear("I've only got an hour left... I need to borrow some time.");
     }
-    if (x == 9) {
+    if (x == 6) {
       console.log("triggered at x = " + x);
       document.getElementById("character").innerHTML = door;
       enterButton = document.createElement("button");
