@@ -3,7 +3,7 @@ let remainingSeconds = 60 * 60;
 let dialogueIntervalId = null;
 //TODO: Create a log of time transactions and display it in the UI
 //TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
-let inventory = ["Watch","Work ID"];
+let inventory = ["Watch", "Work ID"];
 const formatCountdown = (seconds) => {
   const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -172,10 +172,10 @@ const dialogueTree = {
   },
   node5: {
     "id": "node5",
-    "text": "Yeah I'll get back to you on that.",
+    "text": "Thanks! Maybe try going to work.",
     "options": [
-      { "response": "What?", "next": "end" },
-      { "response": "Hey!", "next": "end" }
+      { "response": "Thanks.", "next": "end" },
+      { "response": "Give me back my time!", "next": "end" }
     ]
   },
   end: {
@@ -190,7 +190,7 @@ const dialogueTree = {
     "text": "Where should I go?",
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
-      { "response": "Work.", "next": "work1", "sprite": officer, "requiresItem": "Work ID","removeItem": "Work ID" },
+      { "response": "Work.", "next": "work1", "sprite": officer, "requiresItem": "Work ID", "removeItem": "Work ID" },
       { "response": "City.", "next": "CITY" },
       { "response": "Check watch.", "next": "node3", requiresItem: "Watch" }
     ]
@@ -207,16 +207,23 @@ const dialogueTree = {
     "id": "work2",
     "text": "I don't believe you. You're fired!",
     "options": [
-      { "response": "But I have a good excuse!", "next": "end" },
-      { "response": "I'll be more careful next time.", "next": "end" }
+      { "response": "But I have a good excuse!", "next": "advice2" },
+      { "response": "What should I do next?", "next": "advice2" }
     ]
   },
   work3: {
     "id": "work3",
     "text": "I'll give you some time, but we're letting you go.",
     "options": [
-      { "response": "Can I have a little more?", "next": "end" },
-      { "response": "I'll be more careful next time.", "next": "end" }
+      { "response": "Can I have a little more?", "next": "advice2" },
+      { "response": "What should I do next?", "next": "advice2" }
+    ]
+  },
+  advice2: {
+    "id": "advice2",
+    "text": "More jobs at the edge of the city, take the train.",
+    "options": [
+      { "response": "Thanks!", "next": "end", "sprite": character2 }
     ]
   },
   store1: {
@@ -326,7 +333,14 @@ const dialogueTree = {
     "text": "You need a ticket to board.",
     "options": [
       { "response": "Board", "next": "train2", "requiresItem": "Ticket", "sprite": train },
-      { "response": "I haven't got one.", "next": "CITY", "sprite": character2 }
+      { "response": "I haven't got one.", "next": "advice" }
+    ]
+  },
+  advice: {
+    "id": "advice",
+    "text": "You can buy one at the store.",
+    "options": [
+      { "response": "Thanks!", "next": "CITY", "sprite": character2 }
     ]
   },
   train2: {
@@ -362,10 +376,9 @@ const dialogueTree = {
   },
   town3: {
     "id": "town3",
-    "text": "You are at the edge of the city.",
+    "text": "You are at the edge of the city. What to do now?",
     "options": [
-      { "response": "Yes", "next": "town3", "sprite": character2 },
-      { "response": "No", "next": "town3", "sprite": character2 }
+      { "response": "Yes", "next": "town3", "sprite": character2 }
     ]
   },
 }
