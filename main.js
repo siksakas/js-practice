@@ -3,7 +3,7 @@ let remainingSeconds = 60 * 60;
 let dialogueIntervalId = null;
 //TODO: Create a log of time transactions and display it in the UI
 //TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
-let inventory = ["Watch"];
+let inventory = ["Watch","Work ID"];
 const formatCountdown = (seconds) => {
   const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -21,7 +21,7 @@ const getCountdownEndTime = (secondsFromNow) => {
   let hours = endTime.getHours();
   const minutes = String(endTime.getMinutes()).padStart(2, "0");
   const seconds = String(endTime.getSeconds()).padStart(2, "0");
-  
+
   const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12 || 12; // Convert to 12-hour format (0 becomes 12)
   const hoursStr = String(hours).padStart(2, "0");
@@ -190,7 +190,7 @@ const dialogueTree = {
     "text": "Where should I go?",
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
-      { "response": "Work.", "next": "work1", "sprite": officer },
+      { "response": "Work.", "next": "work1", "sprite": officer, "requiresItem": "Work ID","removeItem": "Work ID" },
       { "response": "City.", "next": "CITY" },
       { "response": "Check watch.", "next": "node3", requiresItem: "Watch" }
     ]
@@ -213,7 +213,7 @@ const dialogueTree = {
   },
   work3: {
     "id": "work3",
-    "text": "Just don't let it happen again.",
+    "text": "I'll give you some time, but we're letting you go.",
     "options": [
       { "response": "Can I have a little more?", "next": "end" },
       { "response": "I'll be more careful next time.", "next": "end" }
@@ -333,10 +333,41 @@ const dialogueTree = {
     "id": "train",
     "text": "This trip will take you out of the city, it'll last 30 minutes.",
     "options": [
-      { "response": "Continue", "next": "node6", "removeItem": "Ticket","time": -30*60},
+      { "response": "Continue", "next": "train3", "removeItem": "Ticket", "time": -30 * 60 },
       { "response": "Nevermind.", "next": "CITY", "sprite": character2 }
     ]
-  }
+  },
+  train3: {
+    "id": "train3",
+    "text": "You've arrived at the edge of the city.",
+    "options": [
+      { "response": "Get off", "next": "town2", "sprite": cat },
+    ]
+  },
+  town2: {
+    "id": "town2",
+    "text": "A cat approaches you.",
+    "options": [
+      { "response": "Pet the cat for 15 minutes.", "next": "worth", "time": -15 * 60, "addItem": "Cat" },
+      { "response": "Ignore the cat.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  worth: {
+    "id": "worth",
+    "text": "The cat is now your friend. Was it worth the 15 minutes?",
+    "options": [
+      { "response": "Yes", "next": "town3", "sprite": character2 },
+      { "response": "No", "next": "town3", "sprite": character2 }
+    ]
+  },
+  town3: {
+    "id": "town3",
+    "text": "You are at the edge of the city.",
+    "options": [
+      { "response": "Yes", "next": "town3", "sprite": character2 },
+      { "response": "No", "next": "town3", "sprite": character2 }
+    ]
+  },
 }
 
 //code to run the dialogue
