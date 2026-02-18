@@ -433,6 +433,10 @@ function renderOptions(boxId) {
           createInventoryUI();
         }
         nextOption(option.next);
+
+        if(remainingSeconds <= 0) {
+          outOfTime();
+        }
       };
       document.body.appendChild(newBox);
     }
@@ -493,4 +497,10 @@ function removeInventory(item) {
 function createInventoryUI() {
   const inventoryDiv = document.getElementById("inventory");
   inventoryDiv.innerHTML = "Inventory: " + inventory.join(", ");
+}
+
+function outOfTime() {
+  clearInterval(clock);
+  document.getElementById("dialogue-box").innerHTML = "You ran out of time. Game over.";
+  Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
 }
