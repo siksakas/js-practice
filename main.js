@@ -193,8 +193,17 @@ const dialogueTree = {
     "options": [
       { "response": "Shop.", "next": "store1", "sprite": merchant },
       { "response": "Work.", "next": "work1", "sprite": officer, "requiresItem": "Work ID", "removeItem": "Work ID" },
+      { "response": "Apartment.", "next": "apartment" },
       { "response": "City.", "next": "CITY" },
       { "response": "Check watch.", "next": "node3", requiresItem: "Watch" }
+    ]
+  },
+  apartment: {
+    "id": "apartment",
+    "text": "You're back in your apartment. Rent is due soon.",
+    "options": [
+      { "response": "Visit friends room", "next": "start", "sprite": character1 },
+      { "response": "(leave)", "next": "node6", "sprite": character2 }
     ]
   },
   work1: {
@@ -233,10 +242,18 @@ const dialogueTree = {
     "text": "What are you looking for?",
     "options": [
       { "response": "I need to borrow some time.", "next": "storeLoan1", "forbiddenItem": "Loan Reminder" },
+      { "response": "I'm here to repay my debt. (45 minutes)", "next": "debt", "requiresItem": "Loan Reminder", "removeItem": "Loan Reminder", "time": -45 * 60 },
       { "response": "I have a package to deliver.", "next": "storePackage1", "requiresItem": "Package", "removeItem": "Package" },
       { "response": "What do you have for sale?", "next": "storeGoods1" },
       { "response": "Why is everyone paying with time?", "next": "storeLore1" },
       { "response": "Nevermind", "next": "node6", "sprite": character2 }
+    ]
+  },
+  debt: {
+    "id": "debt",
+    "text": "You're all set.",
+    "options": [
+      { "response": "Back.", "next": "store1" }
     ]
   },
   storePackage1: {
