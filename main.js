@@ -378,7 +378,96 @@ const dialogueTree = {
     "id": "town3",
     "text": "You are at the edge of the city. What to do now?",
     "options": [
-      { "response": "Yes", "next": "town3", "sprite": character2 }
+      { "response": "Look for work camp.", "next": "edgeCamp1", "sprite": officer },
+      { "response": "Search the scrapyard.", "next": "scrapyard1", "sprite": character2 },
+      { "response": "Head back to the train.", "next": "CITY", "sprite": character2 }
+    ]
+  },
+  edgeCamp1: {
+    "id": "edgeCamp1",
+    "text": "At this factory you give 20 minutes of work for 45 minutes paid.",
+    "options": [
+      { "response": "Take the shift.", "next": "edgeCamp2", "time": -20 * 60 },
+      { "response": "Decline.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  edgeCamp2: {
+    "id": "edgeCamp2",
+    "text": "You are exhausted. The foreman offers your pay.",
+    "options": [
+      { "response": "Collect 45 minutes.", "next": "edgeCamp3", "time": 45 * 60 },
+      { "response": "Leave quietly.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  edgeCamp3: {
+    "id": "edgeCamp3",
+    "text": "Another worker warns that guards raid this camp at dusk. You do not have a proper work permit.",
+    "options": [
+      { "response": "Buy forged papers for 30 minutes.", "next": "edgeCamp4", "time": -30 * 60, "addItem": "Forged Papers" },
+      { "response": "Risk it without papers.", "next": "guardStop1" }
+    ]
+  },
+  edgeCamp4: {
+    "id": "edgeCamp4",
+    "text": "The papers look cheaply made.",
+    "options": [
+      { "response": "Approach checkpoint.", "next": "guardStop1", "sprite": worker}
+    ]
+  },
+  guardStop1: {
+    "id": "guardStop1",
+    "text": "Show me papers and identification.",
+    "options": [
+      { "response": "Show forged papers.", "next": "guardStop2", "requiresItem": "Forged Papers" },
+      { "response": "Try to talk your way through.", "next": "guardStop3" }
+    ]
+  },
+  guardStop2: {
+    "id": "guardStop2",
+    "text": "Looks fine to me. You can pass.",
+    "options": [
+      { "response": "Take one more job before leaving.", "next": "courier1", "removeItem": "Forged Papers", "sprite": worker },
+      { "response": "Go back before anyone notices.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  guardStop3: {
+    "id": "guardStop3",
+    "text": "The officer doesn't buy your story and fines you 15 minutes.",
+    "options": [
+      { "response": "Pay the fine. (15 minutes)", "next": "town3", "time": -15 * 60, "sprite": character2 },
+      { "response": "Run for it.", "next": "scrapyard1", "time": -5 * 60 }
+    ]
+  },
+  scrapyard1: {
+    "id": "scrapyard1",
+    "text": "You end up in a scrapyard. It looks dangerous.",
+    "options": [
+      { "response": "Scavenge for valuables (10 minutes).", "next": "scrapyard2", "time": -10 * 60 },
+      { "response": "Leave it alone.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  scrapyard2: {
+    "id": "scrapyard2",
+    "text": "You salvage a radio. A courier nearby offers to trade for papers to travel easier.",
+    "options": [
+      { "response": "Trade the radio for a courier pass.", "next": "courier1", "addItem": "Courier Pass" },
+      { "response": "Keep the radio and head back.", "next": "town3", "addItem": "Radio", "sprite": character2 }
+    ]
+  },
+  courier1: {
+    "id": "courier1",
+    "text": "Deliver a package for 25 minutes earned.",
+    "options": [
+      { "response": "Accept the courier job.", "next": "courier2", "time": 25 * 60, "addItem": "Package" },
+      { "response": "Decline and rest.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  courier2: {
+    "id": "courier2",
+    "text": "Return to your town and deliver the package to the store.",
+    "options": [
+      { "response": "Return to the outskirts.", "next": "town3", "sprite": character2 },
+      { "response": "Take the train back into the city.", "next": "CITY", "sprite": character2 }
     ]
   },
 }
