@@ -306,7 +306,7 @@ const dialogueTree = {
   },
   storeGoodsTransit: {
     "id": "storeGoodsTransit",
-    "text": "You can take this train ticket to leave the city.",
+    "text": "You can take this two-way train ticket to leave the city and come back.",
     "options": [
       { "response": "Perfect.", "next": "storeGoods1" },
       { "response": "I'm heading out.", "next": "node6", "sprite": character2 }
@@ -388,7 +388,7 @@ const dialogueTree = {
     "options": [
       { "response": "Look for work camp.", "next": "edgeCamp1", "sprite": officer },
       { "response": "Search the scrapyard.", "next": "scrapyard1", "sprite": character2 },
-      { "response": "Head back to the train.", "next": "CITY", "sprite": character2 }
+      { "response": "Take the train back. (30 minutes)", "next": "CITY", "time": -30 * 60, "sprite": character2 }
     ]
   },
   edgeCamp1: {
@@ -475,7 +475,7 @@ const dialogueTree = {
     "text": "Return to your town and deliver the package to the store.",
     "options": [
       { "response": "Return to the outskirts.", "next": "town3", "sprite": character2 },
-      { "response": "Take the train back into the city.", "next": "CITY", "sprite": character2 }
+      { "response": "Take the train back into the city. (30 minutes)", "next": "CITY", "time": 30 * 60, "sprite": character2 }
     ]
   },
 }
