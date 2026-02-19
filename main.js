@@ -371,7 +371,7 @@ const dialogueTree = {
     ]
   },
   train2: {
-    "id": "train",
+    "id": "train2",
     "text": "This trip will take you out of the city, it'll last 30 minutes.",
     "options": [
       { "response": "Continue", "next": "train3", "removeItem": "Ticket", "time": -30 * 60 },
