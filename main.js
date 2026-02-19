@@ -4,6 +4,7 @@ let dialogueIntervalId = null;
 //TODO: Create a log of time transactions and display it in the UI
 //TODO: Certain dialogue options only appear if you have certain items in your inventory or have made certain choices in the past
 let inventory = ["Watch", "Work ID"];
+
 const formatCountdown = (seconds) => {
   const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -12,10 +13,8 @@ const formatCountdown = (seconds) => {
 };
 
 const getCountdownEndTime = (secondsFromNow) => {
-  // current time
-  const now = Date.now();
 
-  // add countdown
+  const now = Date.now();
   const endTime = new Date(now + secondsFromNow * 1000);
 
   let hours = endTime.getHours();
@@ -74,6 +73,7 @@ const door = [
   "|_|___________|_| ejm"
 ].join("\n");
 const merchant = [
+  "merchant:",
   "            ,-----.",
   "           #,-. ,-.#",
   "          () a   e ()",
@@ -98,6 +98,7 @@ const officer = [
   "  jgs \\__/;      '-.",
 ].join("\n");
 const worker = [
+  "guard:",
   "                  _A",
   "                .'`\"'`,",
   "               /   , , \\",
@@ -115,6 +116,7 @@ const worker = [
   "   jgs|    ;,     '.|\\| /"
 ].join("\n");
 const cat = [
+  "cat:",
   "/)",
   "                  ((",
   "                   ))",
@@ -356,6 +358,7 @@ const dialogueTree = {
     "text": "This trip will take you out of the city, it'll last 30 minutes.",
     "options": [
       { "response": "Continue", "next": "train3", "removeItem": "Ticket", "time": -30 * 60 },
+      { "response": "Take the express train. (15 minutes)", "next": "train3", "time": 15 * 60, "requiresItem": "Courier Pass" },
       { "response": "Nevermind.", "next": "CITY", "sprite": character2 }
     ]
   },
@@ -388,7 +391,62 @@ const dialogueTree = {
     "options": [
       { "response": "Look for work camp.", "next": "edgeCamp1", "sprite": officer },
       { "response": "Search the scrapyard.", "next": "scrapyard1", "sprite": character2 },
-      { "response": "Take the train back. (30 minutes)", "next": "CITY", "time": -30 * 60, "sprite": character2 }
+      { "response": "Go to the local market", "next": "market1", "sprite": merchant },
+      { "response": "Take the train back. (30 minutes)", "next": "CITY", "time": -30 * 60, "sprite": character2 },
+      { "response": "Take the express train back into the city. (15 minutes)", "next": "CITY", "time": 15 * 60, "sprite": character2, "requiresItem": "Courier Pass" },
+      { "response": "Use the radio.", "next": "radio1", "sprite": character1, "requiresItem": "Radio" }
+    ]
+  },
+  market1: {
+    "id": "market1",
+    "text": "Hello! What can I do for you?",
+    "options": [
+      { "response": "You look familiar...", "next": "marketLore1" },
+      { "response": "I need to trade.", "next": "market2" },
+      { "response": "(leave)", "next": "town3", "sprite": character2 }
+    ]
+  },
+  marketLore1: {
+    "id": "marketLore1",
+    "text": "You must know my cousin!",
+    "options": [
+      { "response": "I remember.", "next": "market2" },
+      { "response": "I don't remember.", "next": "market2" }
+    ]
+  },
+  market2: {
+    "id": "market2",
+    "text": "I'll buy valuables for time. What do you have?",
+    "options": [
+      { "response": "Sell radio. (15 minutes)", "next": "market2", "removeItem": "Radio", "time": 15 * 60, "requiresItem": "Radio" },
+      { "response": "Sell cat. (45 minutes)", "next": "market2", "removeItem": "Cat", "time": 45 * 60, "requiresItem": "Cat" },
+      { "response": "Sell watch. (45 minutes)", "next": "market2", "removeItem": "Watch", "time": 45 * 60, "requiresItem": "Watch" },
+      { "response": "Sell tea. (3 minutes)", "next": "market2", "removeItem": "Tea", "time": 3 * 60, "requiresItem": "Tea" },
+      { "response": "Buy work permit. (1 hour)", "next": "market2", "time": -60 * 60, "addItem": "City Edge Work Permit" },
+      { "response": "I'm leaving now. (leave)", "next": "town3", "sprite": character2 }
+    ]
+  },
+  radio1: {
+    "id": "radio1",
+    "text": "Hey! How is working going?",
+    "options": [
+      { "response": "Terrible!", "next": "radio2" },
+      { "response": "Amazing!", "next": "radio2" }
+    ]
+  },
+  radio2: {
+    "id": "radio2",
+    "text": "Anyways can I borrow some time? Can you zelle me pls?",
+    "options": [
+      { "response": "Yeah here is 30 minutes. (30 minutes)", "next": "radio3", "time": -30 * 60 },
+      { "response": "Bye.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  radio3: {
+    "id": "radio3",
+    "text": "thanks bye.",
+    "options": [
+      { "response": "???", "next": "town3" }
     ]
   },
   edgeCamp1: {
@@ -412,6 +470,7 @@ const dialogueTree = {
     "text": "Another worker warns that guards raid this camp at dusk. You do not have a proper work permit.",
     "options": [
       { "response": "Buy forged papers for 30 minutes.", "next": "edgeCamp4", "time": -30 * 60, "addItem": "Forged Papers" },
+      { "response": "Don't worry I've got papers", "next": "guardStop1", "requiresItem": "City Edge Work Permit" },
       { "response": "Risk it without papers.", "next": "guardStop1" }
     ]
   },
@@ -419,7 +478,7 @@ const dialogueTree = {
     "id": "edgeCamp4",
     "text": "The papers look cheaply made.",
     "options": [
-      { "response": "Approach checkpoint.", "next": "guardStop1", "sprite": worker}
+      { "response": "Approach checkpoint.", "next": "guardStop1", "sprite": worker }
     ]
   },
   guardStop1: {
@@ -427,7 +486,26 @@ const dialogueTree = {
     "text": "Show me papers and identification.",
     "options": [
       { "response": "Show forged papers.", "next": "guardStop2", "requiresItem": "Forged Papers" },
+      { "response": "Show papers.", "next": "guardStop2", "requiresItem": "City Edge Work Permit" },
+      { "response": "Bribe the guard. (Give Frozen Food)", "next": "guardStopFood", "requiresItem": "Frozen Food", "removeItem": "Frozen Food" },
+      { "response": "Bribe the guard. (Give Cat)", "next": "guardStopCat", "requiresItem": "Cat", "removeItem": "Cat" },
       { "response": "Try to talk your way through.", "next": "guardStop3" }
+    ]
+  },
+  guardStopFood: {
+    "id": "guardStopFood",
+    "text": "I'm quite hungry.",
+    "options": [
+      { "response": "Take one more job before leaving.", "next": "courier1", "sprite": worker },
+      { "response": "Leave the worksite.", "next": "town3", "sprite": character2 }
+    ]
+  },
+  guardStopCat: {
+    "id": "guardStopCat",
+    "text": "Aww! You can pass.",
+    "options": [
+      { "response": "Take one more job before leaving.", "next": "courier1", "sprite": worker },
+      { "response": "Leave the worksite.", "next": "town3", "sprite": character2 }
     ]
   },
   guardStop2: {
@@ -456,7 +534,7 @@ const dialogueTree = {
   },
   scrapyard2: {
     "id": "scrapyard2",
-    "text": "You salvage a radio. A courier nearby offers to trade for papers to travel easier.",
+    "text": "You salvage a radio. A courier nearby offers to trade for papers to travel with the express train.",
     "options": [
       { "response": "Trade the radio for a courier pass.", "next": "courier1", "addItem": "Courier Pass" },
       { "response": "Keep the radio and head back.", "next": "town3", "addItem": "Radio", "sprite": character2 }
@@ -464,7 +542,7 @@ const dialogueTree = {
   },
   courier1: {
     "id": "courier1",
-    "text": "Deliver a package for 25 minutes earned.",
+    "text": "He is busy and offers you a job too: Deliver a package for 25 minutes earned.",
     "options": [
       { "response": "Accept the courier job.", "next": "courier2", "time": 25 * 60, "addItem": "Package" },
       { "response": "Decline and rest.", "next": "town3", "sprite": character2 }
@@ -474,8 +552,9 @@ const dialogueTree = {
     "id": "courier2",
     "text": "Return to your town and deliver the package to the store.",
     "options": [
-      { "response": "Return to the outskirts.", "next": "town3", "sprite": character2 },
-      { "response": "Take the train back into the city. (30 minutes)", "next": "CITY", "time": 30 * 60, "sprite": character2 }
+      { "response": "Return to the city edge.", "next": "town3", "sprite": character2 },
+      { "response": "Take the train back into the city. (30 minutes)", "next": "CITY", "time": 30 * 60, "sprite": character2 },
+      { "response": "Take the express train back into the city. (15 minutes)", "next": "CITY", "time": 15 * 60, "sprite": character2, "requiresItem": "Courier Pass" }
     ]
   },
 }
@@ -508,7 +587,7 @@ function textAppear(str) {
 
 function renderOptions(boxId) {
   dialogueTree[boxId].options.forEach(option => {
-    if ((!option.requiresItem || hasItem(option.requiresItem))&&!(option.forbiddenItem && hasItem(option.forbiddenItem))) {
+    if ((!option.requiresItem || hasItem(option.requiresItem)) && !(option.forbiddenItem && hasItem(option.forbiddenItem))) {
       newBox = document.createElement('button');
       newBox.innerHTML = option.response;
       newBox.className = "option-btn";
@@ -531,7 +610,7 @@ function renderOptions(boxId) {
         }
         nextOption(option.next);
 
-        if(remainingSeconds <= 0) {
+        if (remainingSeconds <= 0) {
           outOfTime();
         }
       };
@@ -570,7 +649,6 @@ window.onload = () => {
       createInventoryUI();
     }
   }, 1000)
-
 }
 
 function nextOption(boxId) {
@@ -599,6 +677,6 @@ function createInventoryUI() {
 function outOfTime() {
   clearInterval(clock);
   document.getElementById("inventory").innerHTML = "You ran out of time. Game over.";
-   document.getElementById("clock").innerHTML = "0:00:00";
+  document.getElementById("clock").innerHTML = "0:00:00";
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
 }
