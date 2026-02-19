@@ -230,10 +230,18 @@ const dialogueTree = {
     "id": "store1",
     "text": "What are you looking for?",
     "options": [
-      { "response": "I need to borrow some time.", "next": "storeLoan1" },
+      { "response": "I need to borrow some time.", "next": "storeLoan1", "forbiddenItem": "Loan Reminder" },
+      { "response": "I have a package to deliver.", "next": "storePackage1", "requiresItem": "Package", "removeItem": "Package" },
       { "response": "What do you have for sale?", "next": "storeGoods1" },
       { "response": "Why is everyone paying with time?", "next": "storeLore1" },
       { "response": "Nevermind", "next": "node6", "sprite": character2 }
+    ]
+  },
+  storePackage1: {
+    "id": "storePackage1",
+    "text": "Thank you. Heres 25 minutes for the delivery.",
+    "options": [
+      { "response": "Thanks!", "next": "node6", "time": 25 * 60, "sprite": character2 }
     ]
   },
   storeLore1: {
@@ -241,14 +249,14 @@ const dialogueTree = {
     "text": "No idea!",
     "options": [
       { "response": "So the poor literally die younger?", "next": "storeLore2" },
-      { "response": "I'm running out of time.", "next": "storeLoan1" }
+      { "response": "I'm running out of time.", "next": "storeLoan1", "forbiddenItem": "Loan Reminder" }
     ]
   },
   storeLore2: {
     "id": "storeLore2",
     "text": "Yeah not me though!",
     "options": [
-      { "response": "I just need enough time to survive today.", "next": "storeLoan1" },
+      { "response": "I just need enough time to survive today.", "next": "storeLoan1", "forbiddenItem": "Loan Reminder" },
       { "response": "What can I buy instead?", "next": "storeGoods1" }
     ]
   },
@@ -256,7 +264,7 @@ const dialogueTree = {
     "id": "storeLoan1",
     "text": "I can give you 30 minutes now. Interest is 45 minutes.",
     "options": [
-      { "response": "Deal.", "next": "storeLoanDeal", "time": 30 * 60 },
+      { "response": "Deal.", "next": "storeLoanDeal", "time": 30 * 60, "addItem": "Loan Reminder" },
       { "response": "Any safer option?", "next": "storeLoan2" },
       { "response": "No thanks.", "next": "store1" }
     ]
@@ -265,8 +273,8 @@ const dialogueTree = {
     "id": "storeLoan2",
     "text": "If you've got something valuable to trade, I can give you time for it.",
     "options": [
-      { "response": "Take my watch.", "next": "storeMemoryDeal", "time": 20 * 60, "removeItem": "Watch", "requiresItem": "Watch" },
-      { "response": "I like the previous deal better.", "next": "storeLoan1" },
+      { "response": "Take my watch. (20 minutes)", "next": "storeMemoryDeal", "time": 20 * 60, "removeItem": "Watch", "requiresItem": "Watch" },
+      { "response": "I like the previous deal better.", "next": "storeLoan1", "forbiddenItem": "Loan Reminder" },
       { "response": "Let me see what's for sale.", "next": "storeGoods1" }
     ]
   },
@@ -290,9 +298,9 @@ const dialogueTree = {
     "id": "storeGoods1",
     "text": "Here's what I have for sale.",
     "options": [
-      { "response": "Train ticket.", "next": "storeGoodsTransit", "time": -5 * 60, "addItem": "Ticket" },
-      { "response": "Tea.", "next": "storeGoodsTea", "time": -1 * 60, "addItem": "Tea" },
-      { "response": "Frozen food.", "next": "storeGoodsFood", "time": -5 * 60, "addItem": "Frozen Food" },
+      { "response": "Train ticket. (10 minutes)", "next": "storeGoodsTransit", "time": -10 * 60, "addItem": "Ticket" },
+      { "response": "Tea. (1 minute)", "next": "storeGoodsTea", "time": -1 * 60, "addItem": "Tea" },
+      { "response": "Frozen food. (5 minutes)", "next": "storeGoodsFood", "time": -5 * 60, "addItem": "Frozen Food" },
       { "response": "Back.", "next": "store1" }
     ]
   },
@@ -435,7 +443,7 @@ const dialogueTree = {
     "text": "The officer doesn't buy your story and fines you 15 minutes.",
     "options": [
       { "response": "Pay the fine. (15 minutes)", "next": "town3", "time": -15 * 60, "sprite": character2 },
-      { "response": "Run for it.", "next": "scrapyard1", "time": -5 * 60 }
+      { "response": "Run for it.", "next": "scrapyard1", "time": -5 * 60, "sprite": character2 }
     ]
   },
   scrapyard1: {
@@ -500,7 +508,7 @@ function textAppear(str) {
 
 function renderOptions(boxId) {
   dialogueTree[boxId].options.forEach(option => {
-    if (!option.requiresItem || hasItem(option.requiresItem)) {
+    if ((!option.requiresItem || hasItem(option.requiresItem))&&!(option.forbiddenItem && hasItem(option.forbiddenItem))) {
       newBox = document.createElement('button');
       newBox.innerHTML = option.response;
       newBox.className = "option-btn";
@@ -590,6 +598,7 @@ function createInventoryUI() {
 
 function outOfTime() {
   clearInterval(clock);
-  document.getElementById("dialogue-box").innerHTML = "You ran out of time. Game over.";
+  document.getElementById("inventory").innerHTML = "You ran out of time. Game over.";
+   document.getElementById("clock").innerHTML = "0:00:00";
   Array.from(document.getElementsByClassName("option-btn")).forEach(btn => btn.remove());
 }
